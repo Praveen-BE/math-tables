@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multiplication Tables 1 to 20</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: #f5f7fa;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #222;
+      }
+
+      .controls {
+        margin-bottom: 20px;
+      }
+
+      .custom-select {
+        position: relative;
+        max-width: 500px;
+        margin: auto;
+      }
+
+      .selected-value {
+        width: 100%;
+        padding: 12px 15px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        cursor: pointer;
+        text-align: left;
+        font-size: 16px;
+      }
+
+      .dropdown-list {
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+        max-height: 40vh;
+        overflow-y: auto;
+
+        display: none;
+        z-index: 1000;
+      }
+
+      .dropdown-list.show {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 12px 15px;
+        cursor: pointer;
+      }
+
+      .dropdown-item:hover {
+        background: #f0f4ff;
+      }
+
+      .table-div {
+        width: 300px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      .table-box {
+        width: 100%;
+        margin: auto;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .row:last-child {
+        border-bottom: none;
+      }
+
+      .series {
+        width: 40px;
+        text-align: start;
+      }
+
+      .symbol {
+        color: #888;
+      }
+
+      .result {
+        width: 50px;
+        text-align: right;
+        font-weight: bold;
+        color: #0078d4;
+      }
+
+      @media (max-width: 500px) {
+        .row {
+          font-size: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Multiplication Tables (1-99)</h1>
+
+    <div class="controls">
+      <div class="custom-select">
+        <button id="selectedValue" class="selected-value">Table 1 ▼</button>
+
+        <div id="dropdownList" class="dropdown-list"></div>
+      </div>
+    </div>
+    <div class="table-div">
+      <table class="table-box" id="tableContainer"></table>
+    </div>
+
+    <script>
+      const tableContainer = document.getElementById("tableContainer");
+      const selectedValue = document.getElementById("selectedValue");
+      const dropdownList = document.getElementById("dropdownList");
+
+      function generateTable(number) {
+        tableContainer.innerHTML = "";
+
+        for (let i = 1; i <= 20; i++) {
+          const row = document.createElement("tr");
+          row.className = "row";
+
+          row.innerHTML = `
+            <th class="series">${i}</th>
+            <th class="symbol">×</th>
+            <th>${number}</th>
+            <th class="symbol">=</th>
+            <th class="result">${number * i}</th>
+          `;
+
+          tableContainer.appendChild(row);
+        }
+      }
+
+      // Create dropdown items
+      for (let i = 1; i <= 99; i++) {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+        item.textContent = `Table ${i}`;
+
+        item.addEventListener("click", () => {
+          selectedValue.textContent = `Table ${i} ▼`;
+          dropdownList.classList.remove("show");
+          generateTable(i);
+        });
+
+        dropdownList.appendChild(item);
+      }
+
+      // Open/close dropdown
+      selectedValue.addEventListener("click", () => {
+        dropdownList.classList.toggle("show");
+      });
+
+      // Close when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".custom-select")) {
+          dropdownList.classList.remove("show");
+        }
+      });
+
+      // Default table
+      generateTable(1);
+    </script>
+  </body>
+</html>
